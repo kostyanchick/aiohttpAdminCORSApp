@@ -1,0 +1,1 @@
+ALLOWED_ORIGINS_COLLECTION = 'allowed_origins'
