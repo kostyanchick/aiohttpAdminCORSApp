@@ -19,13 +19,15 @@ def valid_origin_method(view_method):
     @wraps(view_method)
     async def inner(cls, *args, **kwargs):
         req_origin = cls.request.headers.get('Origin')
+        # try to parse origin string, if failed - use original
+        sub_domain = urlparse(req_origin).netloc or req_origin
         allowed_origins, status = await OriginRepository(db).get_all_origins()
 
         # check whether origin is allowed (is sub-domain)
         # if origin omitted, check whether host is the same as running server
         if req_origin:
             for origin in allowed_origins:
-                match = domain_match(origin)
+                match = domain_match(origin, sub_domain)
                 if match:
                     break
             else:
