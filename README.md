@@ -46,7 +46,8 @@ it will set up database and collection if they do not exist
 ### Api usage
 db contains 1 collection for storing origins:
 - allowed_origins - contains all added allowed origins. 
-Note there additional checks for unique value
+Note there additional checks for unique value and origins
+are used as it is during validation of sub-domain
 
 #### CORS middleware
 
@@ -78,3 +79,8 @@ Make request on any endpoint with method OPTIONS and
 receive list of allowed origins and methods for this endpoint.
 If origin is not allowed, it will be handled by middleware and 
 return status 403
+***
+### To run tests 
+```
+pytest tests
+```
