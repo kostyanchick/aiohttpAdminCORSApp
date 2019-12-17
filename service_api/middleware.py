@@ -1,9 +1,16 @@
 from http import HTTPStatus
 from functools import wraps
+import re
+from urllib.parse import urlparse
 
 from service_api.app import db, app
 from service_api.db.repositories import OriginRepository
 from service_api.constants import HTTP_METHODS
+
+
+def domain_match(origin, sub_domain):
+    pattern = re.compile(r"(//|\.|^)(%s)(\.|/|\?|$)" % (origin.replace('.', '\\.')))
+    return pattern.search(sub_domain)
 
 
 def valid_origin_method(view_method):
@@ -17,7 +24,12 @@ def valid_origin_method(view_method):
         # check whether origin is allowed (is sub-domain)
         # if origin omitted, check whether host is the same as running server
         if req_origin:
-            match = [origin for origin in allowed_origins if (origin in req_origin)]
+            for origin in allowed_origins:
+                match = domain_match(origin)
+                if match:
+                    break
+            else:
+                match = None
         else:
             match = cls.request.headers['Host'].split(':')[0] == app.config['APP_HOST']
 
