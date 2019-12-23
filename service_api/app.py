@@ -15,7 +15,8 @@ app = web.Application(loop=loop)
 app.config = Config()
 
 # connect and create db if not exist
-mongo_client = AsyncIOMotorClient(app.config['MONGO_HOST'], app.config['MONGO_PORT'])
+mongo_client = AsyncIOMotorClient(app.config['MONGO_HOST'], app.config['MONGO_PORT'],
+                                  serverSelectionTimeoutMS=100)
 db = mongo_client[app.config['MONGO_DB_NAME']]
 
 
