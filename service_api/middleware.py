@@ -22,6 +22,8 @@ def valid_origin_method(view_method):
         # check whether origin is allowed (is sub-domain)
         # if origin omitted, check whether host is the same as running server
         if req_origin:
+            match = None
+
             # try to parse origin string, if failed - use original
             sub_domain = urlparse(req_origin).netloc or req_origin
             result, status = await OriginRepository(db).get_all_origins()
@@ -32,8 +34,6 @@ def valid_origin_method(view_method):
                     match = domain_match(origin, sub_domain)
                     if match:
                         break
-                else:
-                    match = None
             else:
                 message = {'error_message': str(result)}
                 return cls._get_response(data=message, status=status)
