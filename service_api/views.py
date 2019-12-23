@@ -11,7 +11,6 @@ from service_api.constants import HTTP_METHODS
 from service_api.middleware import valid_origin_view
 
 
-@valid_origin_view()
 class BaseView(web.View):
 
     async def options(self, *args, **kwargs):
